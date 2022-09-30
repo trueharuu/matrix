@@ -1,3 +1,4 @@
+import { inspect } from "node:util";
 type ArrayLengthMutationKeys = "splice" | "push" | "pop" | "shift" | "unshift";
 type FixedLengthArray<T, L extends number, TObj = [T, ...Array<T>]> = Pick<
   TObj,
@@ -116,20 +117,21 @@ export class Matrix<Rows extends number, Columns extends number> {
 
     // https://stackoverflow.com/questions/27205018/multiply-2-matrices-in-javascript
 
-    var aNumRows = this.rowCount,
-      aNumCols = this.columnCount,
-      bNumCols = matrix.columnCount,
-      m = new Array(aNumRows); // initialize array of rows
+    var ar = this.rowCount,
+      ac = this.columnCount,
+      bc = matrix.columnCount,
+      m = new Array(ar); // initialize array of rows
 
-    for (var r = 0; r < aNumRows; ++r) {
-      m[r] = new Array(bNumCols); // initialize the current row
-      for (var c = 0; c < bNumCols; ++c) {
+    for (var r = 0; r < ar; ++r) {
+      m[r] = new Array(bc); // initialize the current row
+      for (var c = 0; c < bc; ++c) {
         m[r][c] = 0; // initialize the current cell
-        for (var i = 0; i < aNumCols; ++i) {
+        for (var i = 0; i < ac; ++i) {
           m[r][c] += this.data[r]![i]! * matrix.data[i]![c]!;
         }
       }
     }
+
     return Matrix.from(m as never) as never;
   }
 
@@ -229,5 +231,13 @@ export class Matrix<Rows extends number, Columns extends number> {
         longest.length * this.columnCount + this.columnCount - 1
       )} ${br}\n`
     );
+  }
+
+  [inspect.custom]() {
+    return this.toString();
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.toString();
   }
 }
