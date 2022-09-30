@@ -233,6 +233,38 @@ export class Matrix<Rows extends number, Columns extends number> {
     );
   }
 
+  //swaps row1 with row2
+  permute(source: number, target: number) {
+    const id = this;
+    const temp = id.row(source);
+    this.data[source]! = id.row(target);
+    this.data[target]! = temp;
+
+    return id;
+  }
+
+  multiplyRow(row: number, mul: number) {
+    const id = this;
+    return id.map((value, x) => {
+      if (x === row) {
+        return value * mul;
+      }
+
+      return value;
+    })
+  }
+  //add to manipulated row the multiplication of another row
+  addRow(source: number, target: number, mul: number) {
+    const id = this;
+    const rowManipulated = id.row(manipulated)!;
+    const byRowxFactor = id.multiplyRow(target, mul)!;
+    for (let i = 0; i < byRowxFactor.length; i++) {
+      rowManipulated[i] += byRowxFactor[i]!
+    }
+
+    return id;
+  }
+
   [inspect.custom]() {
     return this.toString();
   }
